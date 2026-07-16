@@ -7,11 +7,11 @@ from datetime import datetime
 from typing import Dict, Optional, Tuple
 import logging
 
-# Configure logging
+#Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Initialize Firebase
+#Initialize Firebase
 firebase_config = os.environ.get('FIREBASE_CONFIG')
 if firebase_config:
     cred_dict = json.loads(firebase_config)
@@ -26,10 +26,10 @@ firebase_admin.initialize_app(cred, {
 fs = firestore.client()
 start_time = time.time()
 
-# Configuration
+#Configuration
 NOTIFICATION_COOLDOWN_MINUTES = 20
-PEAK_HOURS_START = 18  # 6 PM
-PEAK_HOURS_END = 22    # 10 PM
+PEAK_HOURS_START = 18  #6PM
+PEAK_HOURS_END = 22    #10PM
 
 # Store last notification time
 last_notification_time: Dict[str, float] = {}
@@ -152,7 +152,7 @@ class PowerMonitor:
             
             self.send_notification(fcm_token, title, body, uid, device_id, is_peak)
         elif current_limit:
-            # Reset cooldown when back within limits
+            #Reset cooldown when back within limits
             cooldown_key = self.get_cooldown_key(uid, device_id, is_peak)
             if cooldown_key in last_notification_time:
                 del last_notification_time[cooldown_key]
@@ -160,11 +160,9 @@ class PowerMonitor:
     
     def process_data(self, event):
         """Process realtime database events"""
-        # Skip initial sync
         if time.time() - start_time < 5 or event.data is None:
             return
         
-        # Parse path
         path_parts = event.path.strip('/').split('/')
         if len(path_parts) < 4 or path_parts[-1] != 'latest':
             return
@@ -179,7 +177,7 @@ class PowerMonitor:
             logger.info(f"📊 {uid}/{device_id}: {power_watts}W")
             self.check_limits(uid, power_watts, device_id)
 
-# Start monitoring
+#Start monitoring
 if __name__ == "__main__":
     monitor = PowerMonitor()
     logger.info("🚀 Power Monitor Service Started")
