@@ -1,6 +1,5 @@
 # Secrets 
 serviceAccountKey.json
-.env
 *.env
 
 # Python
@@ -13,3 +12,5 @@ __pycache__/
 # OS
 .DS_Store
 Thumbs.db
+config.bat
+node_modules
